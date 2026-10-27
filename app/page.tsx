@@ -6,8 +6,6 @@ import { ImageDrop } from "@/components/ImageDrop";
 import { ManualForm, isBlank, newRow, rowError, type Row } from "@/components/ManualForm";
 import { Report } from "@/components/Report";
 
-const SAMPLE: [number, number][] = [[28, 22], [30, 23], [36, 31], [40, 31], [36, 27], [38, 26], [38, 29]];
-
 function Step({ n, title, aside, children, ref }: { n: string; title: string; aside?: React.ReactNode; children: React.ReactNode; ref?: React.Ref<HTMLElement> }) {
   return (
     <section ref={ref} className="grid scroll-mt-6 gap-6 border-t border-line py-12 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-10 sm:py-16">
@@ -57,11 +55,6 @@ export default function Home() {
     scrollToReport();
   };
 
-  const loadSample = () => {
-    setRows(SAMPLE.map(([total, present]) => newRow({ total: String(total), present: String(present) })));
-    setFormError(null);
-  };
-
   const startOver = () => {
     setRows([newRow()]);
     setSubmitted(false);
@@ -73,10 +66,10 @@ export default function Home() {
     <div className="mx-auto max-w-5xl px-4 sm:px-8">
       <section className="pb-16 pt-16 text-center sm:pb-24 sm:pt-24">
         <h1
-          className="font-serif text-[clamp(4.5rem,21vw,13rem)] leading-[0.85]"
+          className="font-serif text-[clamp(3.25rem,14vw,8rem)] leading-[0.9]"
           style={{ WebkitTextStroke: "0.03em currentColor" }}
         >
-          Bunkmeter
+          Bunk<span className="text-accent italic">meter</span>
         </h1>
         <p className="mx-auto mt-8 max-w-2xl font-serif text-3xl leading-tight text-balance sm:text-5xl">
           How many classes can you <em className="text-accent">actually</em> skip?
@@ -90,15 +83,7 @@ export default function Home() {
         <MinInput value={minText} onChange={setMinText} error={minError} />
       </Step>
 
-      <Step
-        n="02"
-        title="Your attendance"
-        aside={
-          <button type="button" onClick={loadSample} className="text-sm text-muted underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-ink">
-            Try with sample data
-          </button>
-        }
-      >
+      <Step n="02" title="Your attendance">
         <ImageDrop onResult={onExtract} />
 
         <div className="my-8 flex items-center gap-4 font-mono text-xs text-muted">

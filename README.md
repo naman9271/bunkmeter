@@ -9,7 +9,7 @@ Upload a screenshot of your attendance sheet, set your minimum attendance %, and
    - Paid alternative: `ANTHROPIC_API_KEY`
 3. `npm run dev` → http://localhost:3000
 
-No key? Click "try it with sample data" on the home page.
+No key? You can still type your numbers in manually.
 
 ## How images are read
 1. **Tesseract (in the browser):** free, no key, no quota. Used first, and only trusted if the numbers pass a check (held = absent + present, or present ÷ held matches the % row). Handles subjects-as-columns and subjects-as-rows tables.
@@ -24,6 +24,6 @@ With `GEMINI_API_KEY`, the server tries `gemini-flash-lite-latest`, then `gemini
 - Must attend (when below min): `ceil((min·total − present) / (1 − min))`
 
 ## Layout
-- `app/api/extract/route.ts` – image → JSON via Gemini or Claude
-- `lib/calc.ts` – attendance maths
-- `components/` – minimum input, image drop/paste, manual form, report
+- `app/api/extract/route.ts`: image → JSON via Gemini or Claude
+- `lib/calc.ts`: attendance maths
+- `components/`: minimum input, image drop/paste, manual form, report
