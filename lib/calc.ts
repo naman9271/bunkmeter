@@ -1,6 +1,6 @@
 export type Course = { name: string; total: number; present: number };
 
-export type Status = "safe" | "edge" | "danger";
+export type Status = "safe" | "edge" | "short";
 
 export type Analysis = {
   absent: number;
@@ -10,6 +10,8 @@ export type Analysis = {
   canSkip: number;
   /** consecutive classes that must be attended to climb back to min (0 if fine) */
   mustAttend: number;
+  /** attendance % after skipping canSkip, or after attending mustAttend */
+  projected: number;
 };
 
 const EPS = 1e-9;
@@ -22,8 +24,10 @@ export function analyze(c: Course, minPct: number): Analysis {
 
   if (pct + EPS >= minPct) {
     const canSkip = m > 0 ? Math.max(Math.floor(present / m - total + EPS), 0) : 999;
-    return { absent, pct, canSkip, mustAttend: 0, status: canSkip <= 1 ? "edge" : "safe" };
+    const projected = (present / (total + canSkip)) * 100;
+    return { absent, pct, canSkip, mustAttend: 0, projected, status: canSkip <= 1 ? "edge" : "safe" };
   }
   const mustAttend = m >= 1 ? Infinity : Math.ceil((m * total - present) / (1 - m) - EPS);
-  return { absent, pct, canSkip: 0, mustAttend, status: "danger" };
+  const projected = Number.isFinite(mustAttend) ? ((present + mustAttend) / (total + mustAttend)) * 100 : 0;
+  return { absent, pct, canSkip: 0, mustAttend, projected, status: "short" };
 }
