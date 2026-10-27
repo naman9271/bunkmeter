@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #07060d;
+  --safe: #34f5c5;
+  --edge: #ffc857;
+  --danger: #ff4d8d;
+}
+
+html { color-scheme: dark; }
+
+body {
+  background: var(--bg);
+  color: #ecebf5;
+  font-family: ui-sans-serif, system-ui, "Inter", "Segoe UI", sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.aurora { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+.aurora::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 50% 30%, #000 20%, transparent 75%);
+}
+.blob { position: absolute; border-radius: 9999px; filter: blur(110px); opacity: .5; animation: float 18s ease-in-out infinite; }
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(60px, -50px) scale(1.15); }
+}
+
+.glass {
+  background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+  border: 1px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 10px 50px -12px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.grad-text {
+  background: linear-gradient(100deg, #34f5c5, #7c8cff 45%, #ff4d8d);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  background-size: 200% auto; animation: shine 6s linear infinite;
+}
+@keyframes shine { to { background-position: 200% center; } }
+
+.scanline { position: absolute; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, #34f5c5, transparent);
+  box-shadow: 0 0 24px 6px rgba(52,245,197,.6);
+  animation: scan 1.6s ease-in-out infinite; }
+@keyframes scan { 0% { top: 0; } 50% { top: calc(100% - 3px); } 100% { top: 0; } }
+
+input[type="range"] { accent-color: #7c8cff; }
+.num-input { background: transparent; width: 100%; outline: none; border-bottom: 1px dashed rgba(255,255,255,.2); text-align: center; }
+.num-input:focus { border-color: #7c8cff; }
