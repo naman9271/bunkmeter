@@ -135,6 +135,11 @@ export function ImageDrop({ onResult }: { onResult: (courses: Course[]) => void 
               ? "Done. The numbers are filled in below. Fix anything that looks off."
               : "PNG, JPG or WEBP. Columns without subject names become Course 1, Course 2, and so on."}
       </p>
+
+      <p className="mt-4 rounded-lg border border-line bg-card px-4 py-3 text-sm text-pretty text-muted">
+        <span className="font-medium text-ink">Tip:</span> zoom in so the <span className="text-ink">Overall Classes</span>, <span className="text-ink">Overall Present</span> and{" "}
+        <span className="text-ink">Overall Absent</span> rows fill the screenshot, or crop to just that table. Bigger, cleaner numbers are read more accurately.
+      </p>
     </div>
   );
 }

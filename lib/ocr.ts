@@ -94,6 +94,8 @@ export function preprocess(src: Raster, darkness = 1): Raster {
   return { data: out, width: W, height: H };
 }
 
+const MIN_SUBJECTS = 2;
+
 type Kind = "total" | "absent" | "present" | "pct" | null;
 type Cell = { n: number; pct: boolean; x: number };
 type Line = { y: number; cells: Cell[]; label: string; kind: Kind; overall: boolean };
@@ -174,6 +176,8 @@ function parseOriented(words: OcrWord[]): Pick | null {
 
   let best: Pick | null = null;
   const consider = (score: number, t: Line, p: Line) => {
+    if (t.cells.length < MIN_SUBJECTS) return; // a single column passes the sums by coincidence
+    score += t.cells.length; // more subjects agreeing = more trustworthy
     score += Math.min(t.y, p.y) / 1e6; // tie-break: lower in the sheet = cumulative totals
     if (!best || score > best.score)
       best = { score, top: Math.min(...lines.map((l) => l.y - hMed)), courses: t.cells.map((c, i) => ({ total: c.n, present: p.cells[i].n, at: c.x })) };
@@ -209,7 +213,7 @@ function namesFor(words: OcrWord[], pick: Pick): string[] {
   const { alpha } = classify(words);
   const gaps = pick.courses.slice(1).map((c, i) => c.at - pick.courses[i].at);
   const tol = gaps.length ? Math.min(...gaps) * 0.45 : Infinity;
-  return pick.courses.map((c, i) => {
+  const found = pick.courses.map((c) => {
     const name = alpha
       .filter((w) => w.bbox.y1 <= pick.top && Math.abs(xc(w) - c.at) < tol)
       .sort((a, b) => a.bbox.y0 - b.bbox.y0 || a.bbox.x0 - b.bbox.x0)
@@ -217,8 +221,10 @@ function namesFor(words: OcrWord[], pick: Pick): string[] {
       .join(" ")
       .replace(/[^\w&().\- ]/g, "")
       .trim();
-    return name.length >= 2 ? name : `Course ${i + 1}`;
+    return /[a-z]{3,}/i.test(name) ? name : "";
   });
+  // all-or-nothing: a mix of real names and "Course N" would be confusing
+  return found.every(Boolean) ? found : found.map((_, i) => `Course ${i + 1}`);
 }
 
 export function parseAttendance(words: OcrWord[]): Course[] | null {

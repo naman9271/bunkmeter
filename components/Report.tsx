@@ -16,7 +16,7 @@ function Verdict({ a, min }: { a: Analysis; min: number }) {
     const finite = Number.isFinite(a.mustAttend);
     return (
       <>
-        <div className="font-serif text-6xl leading-none text-short tabular-nums">{finite ? a.mustAttend : "∞"}</div>
+        <div className="font-serif text-5xl leading-none text-short tabular-nums">{finite ? a.mustAttend : "∞"}</div>
         <div className="mt-2 text-sm">must attend in a row</div>
         <div className="mt-0.5 font-mono text-xs text-muted">{finite ? `→ back to ${fmt(a.projected)}` : `can't reach ${min}%`}</div>
       </>
@@ -24,7 +24,7 @@ function Verdict({ a, min }: { a: Analysis; min: number }) {
   }
   return (
     <>
-      <div className="font-serif text-6xl leading-none tabular-nums">{a.canSkip}</div>
+      <div className="font-serif text-5xl leading-none tabular-nums">{a.canSkip}</div>
       <div className="mt-2 text-sm">{a.canSkip === 1 ? "class you can skip" : "classes you can skip"}</div>
       <div className="mt-0.5 font-mono text-xs text-muted">{a.canSkip ? `→ lands at ${fmt(a.projected)}` : "don't miss the next one"}</div>
     </>
@@ -55,7 +55,7 @@ export function Report({ courses, min }: { courses: Course[]; min: number }) {
         ))}
       </dl>
 
-      <ol className="divide-y divide-line border-b border-line">
+      <ol className="grid sm:grid-cols-2 sm:gap-x-10">
         {courses.map((c, i) => {
           const a = results[i];
           const st = STATUS[a.status];
@@ -65,10 +65,8 @@ export function Report({ courses, min }: { courses: Course[]; min: number }) {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, ease: "easeOut", delay: Math.min(i * 0.03, 0.3) }}
-              className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-6 gap-y-4 py-7 sm:grid-cols-[2.5rem_minmax(0,1fr)_13rem] sm:items-center"
+              className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-5 border-b border-line py-6"
             >
-              <span className="hidden font-mono text-sm text-muted tabular-nums sm:block">{String(i + 1).padStart(2, "0")}</span>
-
               <div className="min-w-0">
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <h3 className="truncate text-lg font-medium">{c.name}</h3>
@@ -89,7 +87,7 @@ export function Report({ courses, min }: { courses: Course[]; min: number }) {
                 </div>
               </div>
 
-              <div className="row-start-1 text-right sm:row-start-auto">
+              <div className="text-right">
                 <Verdict a={a} min={min} />
               </div>
             </motion.li>
